@@ -523,59 +523,25 @@ async function callClaude(messages, systemPrompt) {
 }
 
 function extractJSON(text) {
-  let t = text.trim();
-  // Strip markdown fences
-  const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/);
-  if (fence) t = fence[1].trim();
-  // Extract outermost { }
-  const s = t.indexOf("{"), e = t.lastIndexOf("}");
-  if (s !== -1 && e !== -1) t = t.slice(s, e + 1);
-  // Fix common llm JSON issues:
-  // 1. Remove trailing commas before } or ]
-  t = t.replace(/,\s*([}\]])/g, "$1");
-  // 2. Fix unescaped newlines inside string values
-  t = t.replace(/("(?:[^"\\]|\\.)*")|([\n\r])/g, (m, str, nl) => str ? str : " ");
-  // 3. Fix unescaped quotes inside strings (basic)
-  try {
-    return JSON.parse(t);
-  } catch(e1) {
-    // Last resort: try to extract field by field
-    const fallback = {};
-    const totalMatch = t.match(/"total_score"\s*:\s*(\d+)/);
-    if (totalMatch) fallback.total_score = parseInt(totalMatch[1]);
-    const scoresMatch = t.match(/"scores"\s*:\s*({[^}]+})/);
-    if (scoresMatch) { try { fallback.scores = JSON.parse(scoresMatch[1].replace(/,\s*}/g,"}")); } catch{} }
-    const diagMatch = t.match(/"diagnosis"\s*:\s*({[^}]+})/);
-    if (diagMatch) { try { fallback.diagnosis = JSON.parse(diagMatch[1].replace(/,\s*}/g,"}")); } catch{} }
-    const improvedMatch = t.match(/"improved_prompt"\s*:\s*"([\s\S]*?)(?:"|,\s*"short_explanation")/);
-    if (improvedMatch) fallback.improved_prompt = improvedMatch[1];
-    const shortMatch = t.match(/"short_explanation"\s*:\s*"([^"]+)"/);
-    if (shortMatch) fallback.short_explanation = shortMatch[1];
-    fallback.improvements = [];
-    const impMatches = t.matchAll(/"([^"]{10,}?)"/g);
-    if (!fallback.total_score) throw new Error("El modelo no devolvió JSON válido. Intenta de nuevo.");
-    return fallback;
-  }
+  let t=text.trim();
+  const fence=t.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if(fence) t=fence[1].trim();
+  const s=t.indexOf("{"), e=t.lastIndexOf("}");
+  if(s!==-1&&e!==-1) t=t.slice(s,e+1);
+  return JSON.parse(t);
 }
 
-const EVAL_SYSTEM=`Eres un evaluador de prompts. Responde SOLO con JSON, sin texto antes ni después, sin markdown.
-
-Evalúa el prompt según estas 5 dimensiones:
-- persona (0-25): tiene rol o perfil del experto?
-- task (0-25): tarea clara y concreta?
-- context (0-20): suficiente contexto?
-- constraints (0-15): restricciones de formato, tono, idioma?
-- clarity (0-15): lenguaje preciso?
-
-El campo improved_prompt DEBE tener exactamente esta estructura (sin preguntas, solo instrucciones):
-[ROL] Actua como [experto] con experiencia en [area].
-[TAREA] Tu tarea es [accion concreta y medible].
-[CONTEXTO] Contexto: [quien pregunta, para que, nivel de conocimiento].
-[RESTRICCIONES] Responde en [idioma]. Formato: [lista o parrafos]. Tono: [formal o divulgativo].
-[CLARIDAD] [objetivo reformulado con precision, sin ambiguedad].
-
-Responde UNICAMENTE con este JSON (sin comillas especiales, sin saltos de linea dentro de strings):
-{"total_score":0,"scores":{"persona":0,"task":0,"context":0,"constraints":0,"clarity":0},"diagnosis":{"persona":"texto","task":"texto","context":"texto","constraints":"texto","clarity":"texto"},"improvements":["mejora 1","mejora 2","mejora 3","mejora 4"],"improved_prompt":"[ROL] ... [TAREA] ... [CONTEXTO] ... [RESTRICCIONES] ... [CLARIDAD] ...","short_explanation":"resumen en 2 oraciones"}`;
+const EVAL_SYSTEM=`Eres un experto mundial en prompt engineering. Evalúa el prompt con criterio exigente y devuelve ÚNICAMENTE un JSON válido:
+{
+  "total_score": int_1_100,
+  "scores": {"persona":0-25,"task":0-25,"context":0-20,"constraints":0-15,"clarity":0-15},
+  "diagnosis": {"persona":"texto","task":"texto","context":"texto","constraints":"texto","clarity":"texto"},
+  "improvements": ["sugerencia 1","sugerencia 2","sugerencia 3","sugerencia 4"],
+  "improved_prompt": "prompt mejorado completo con ejemplos few-shot de pregunta-respuesta cuando aplique",
+  "short_explanation": "resumen en 2-3 oraciones del diagnóstico global"
+}
+Rubrica: Persona/Rol(0-25): rol claro y específico; Tarea(0-25): objetivo concreto y medible; Contexto(0-20): información suficiente; Restricciones(0-15): formato/longitud/tono/idioma; Claridad(0-15): lenguaje preciso sin ambigüedad.
+El prompt mejorado debe ser rico y completo. Cuando sea útil, incluye un ejemplo de pregunta-respuesta (few-shot) para guiar al modelo hacia el formato y tono esperados. El idioma de los textos debe coincidir con el del prompt evaluado. NO incluyas nada fuera del JSON.`;
 
 // ─── EXAMPLE PROMPTS FOR EVALUATOR ───────────────────────────────────────────
 const EXAMPLE_PROMPTS = [
