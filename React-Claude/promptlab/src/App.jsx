@@ -523,25 +523,68 @@ async function callClaude(messages, systemPrompt) {
 }
 
 function extractJSON(text) {
-  let t=text.trim();
-  const fence=t.match(/```(?:json)?\s*([\s\S]*?)```/);
-  if(fence) t=fence[1].trim();
-  const s=t.indexOf("{"), e=t.lastIndexOf("}");
-  if(s!==-1&&e!==-1) t=t.slice(s,e+1);
-  return JSON.parse(t);
+  let t = text.trim();
+
+  // 1. Quitar markdown fences si el modelo los agrega
+  const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (fence) t = fence[1].trim();
+
+  // 2. Extraer el bloque { ... } más externo
+  const s = t.indexOf("{"), e = t.lastIndexOf("}");
+  if (s !== -1 && e !== -1) t = t.slice(s, e + 1);
+
+  // 3. Recorrer caracter por caracter para limpiar saltos de línea
+  //    reales dentro de strings (bug común en llama3)
+  let fixed = "";
+  let inString = false;
+  let escape = false;
+  for (let i = 0; i < t.length; i++) {
+    const ch = t[i];
+    if (escape) { fixed += ch; escape = false; continue; }
+    if (ch === "\\") { escape = true; fixed += ch; continue; }
+    if (ch === '"') { inString = !inString; fixed += ch; continue; }
+    if (inString && (ch === "\n" || ch === "\r" || ch === "\t")) {
+      fixed += " "; continue;
+    }
+    fixed += ch;
+  }
+  t = fixed;
+
+  // 4. Eliminar comas sueltas antes de } o ]
+  t = t.replace(/,\s*([}\]])/g, "$1");
+
+  try {
+    return JSON.parse(t);
+  } catch(err) {
+    throw new Error("El modelo no generó JSON válido. Intenta de nuevo.");
+  }
 }
 
-const EVAL_SYSTEM=`Eres un experto mundial en prompt engineering. Evalúa el prompt con criterio exigente y devuelve ÚNICAMENTE un JSON válido:
-{
-  "total_score": int_1_100,
-  "scores": {"persona":0-25,"task":0-25,"context":0-20,"constraints":0-15,"clarity":0-15},
-  "diagnosis": {"persona":"texto","task":"texto","context":"texto","constraints":"texto","clarity":"texto"},
-  "improvements": ["sugerencia 1","sugerencia 2","sugerencia 3","sugerencia 4"],
-  "improved_prompt": "prompt mejorado completo con ejemplos few-shot de pregunta-respuesta cuando aplique",
-  "short_explanation": "resumen en 2-3 oraciones del diagnóstico global"
-}
-Rubrica: Persona/Rol(0-25): rol claro y específico; Tarea(0-25): objetivo concreto y medible; Contexto(0-20): información suficiente; Restricciones(0-15): formato/longitud/tono/idioma; Claridad(0-15): lenguaje preciso sin ambigüedad.
-El prompt mejorado debe ser rico y completo. Cuando sea útil, incluye un ejemplo de pregunta-respuesta (few-shot) para guiar al modelo hacia el formato y tono esperados. El idioma de los textos debe coincidir con el del prompt evaluado. NO incluyas nada fuera del JSON.`;
+const EVAL_SYSTEM=`Eres un evaluador experto de prompts de IA. Debes responder UNICAMENTE con un objeto JSON en una sola linea, sin saltos de linea, sin markdown, sin texto adicional antes ni despues.
+
+REGLAS DEL JSON:
+- Todo el JSON debe estar en UNA SOLA LINEA
+- No uses saltos de linea dentro de ningun valor string
+- No uses comillas dobles dentro de los strings, usa comillas simples si necesitas citar algo
+
+RUBRICA DE PUNTUACION:
+- persona (0-25): tiene rol o perfil experto definido?
+- task (0-25): tarea clara, concreta y medible?
+- context (0-20): suficiente informacion de fondo?
+- constraints (0-15): especifica formato, tono, idioma, extension?
+- clarity (0-15): lenguaje preciso sin ambiguedad?
+
+REGLAS DEL improved_prompt:
+1. SIEMPRE incluye los 5 bloques con estas etiquetas exactas: [ROL], [TAREA], [CONTEXTO], [RESTRICCIONES], [CLARIDAD]
+2. NUNCA hagas preguntas en el improved_prompt
+3. Es una instruccion completa, no un dialogo
+4. Infiere el contexto mas probable si el prompt original es vago
+5. Todo en una sola linea sin saltos de linea
+
+Formato EXACTO que debes devolver (una sola linea):
+{"total_score":0,"scores":{"persona":0,"task":0,"context":0,"constraints":0,"clarity":0},"diagnosis":{"persona":"texto","task":"texto","context":"texto","constraints":"texto","clarity":"texto"},"improvements":["mejora 1","mejora 2","mejora 3","mejora 4"],"improved_prompt":"[ROL] texto. [TAREA] texto. [CONTEXTO] texto. [RESTRICCIONES] texto. [CLARIDAD] texto.","short_explanation":"resumen en 2 oraciones"}
+
+El idioma de todos los textos debe coincidir con el idioma del prompt evaluado.`;
 
 // ─── EXAMPLE PROMPTS FOR EVALUATOR ───────────────────────────────────────────
 const EXAMPLE_PROMPTS = [
