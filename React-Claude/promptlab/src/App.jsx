@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+ 
 // ─── DESIGN TOKENS ────────────────────────────────────────────────────────────
 const C = {
   bg:          "#eef3fb",
@@ -28,7 +28,7 @@ const C = {
   shadow:      "0 2px 16px rgba(30,57,104,0.09)",
   shadowLg:    "0 8px 32px rgba(30,57,104,0.13)",
 };
-
+ 
 // ─── PROMPT LIBRARY ───────────────────────────────────────────────────────────
 const CAT_META = {
   Productividad: { color: C.amber,  light: C.amberLight,  icon: "⚡" },
@@ -39,60 +39,60 @@ const CAT_META = {
   Legal:         { color: C.teal,   light: C.tealLight,   icon: "⚖️" },
   Finanzas:      { color: C.sky,    light: C.skyLight,    icon: "📊" },
 };
-
+ 
 const PROMPTS = [
   { id:1, cat:"Productividad", icon:"⚡", title:"Priorización de tareas diarias",
     desc:"Organiza tu día con claridad usando el método Eisenhower.",
     prompt:`Actúa como un coach de productividad experto en el método GTD y la técnica Eisenhower.
-
+ 
 Tengo las siguientes tareas pendientes para hoy:
 [LISTA DE TAREAS]
-
+ 
 Por favor:
 1. Clasifica cada tarea según la matriz urgente/importante.
 2. Propón un orden de ejecución optimizado para máxima productividad.
 3. Identifica cuáles delegar o eliminar.
 4. Estima el tiempo necesario para cada tarea.
 5. Sugiere bloques de tiempo específicos considerando picos de energía cognitiva.
-
+ 
 Formato esperado:
 Tarea | Cuadrante | Prioridad | Tiempo estimado | Acción recomendada
-
+ 
 Responde en español con bullet points claros y tabla comparativa.` },
-
+ 
   { id:2, cat:"Productividad", icon:"📋", title:"Plan de proyecto desde cero",
     desc:"Estructura cualquier proyecto con hitos, riesgos y KPIs.",
     prompt:`Eres un gerente de proyectos senior certificado en PMP y metodologías ágiles.
-
+ 
 Proyecto: [NOMBRE DEL PROYECTO]
 Objetivo: [OBJETIVO PRINCIPAL]
 Plazo: [FECHA LÍMITE]
 Equipo disponible: [NÚMERO DE PERSONAS Y ROLES]
 Presupuesto aproximado: [MONTO]
-
+ 
 Genera un plan de proyecto completo que incluya:
 1. Desglose de trabajo (WBS) en fases y entregables.
 2. Cronograma con hitos clave (formato tabla).
 3. Riesgos identificados y estrategias de mitigación.
 4. KPIs de seguimiento.
 5. Matriz RACI simplificada.
-
+ 
 Ejemplo del formato esperado para cronograma:
 Fase | Entregable | Inicio | Fin | Responsable | Estado
-
+ 
 Usa lenguaje ejecutivo, claro y orientado a resultados.` },
-
+ 
   { id:3, cat:"Productividad", icon:"🧠", title:"Análisis crítico de documento",
     desc:"Extrae insights y evalúa cualquier informe o propuesta.",
     prompt:`Eres un analista estratégico senior con experiencia en consultoría de management.
-
+ 
 Documento a analizar:
 [PEGAR TEXTO O DESCRIBIR EL DOCUMENTO]
-
+ 
 Tipo: [INFORME / PROPUESTA / CONTRATO / ARTÍCULO / ESTRATEGIA]
 Propósito del análisis: [POR QUÉ LO ESTÁS ANALIZANDO]
 Decisión que depende de este análisis: [CONTEXTO]
-
+ 
 Analiza y provee:
 1. Resumen ejecutivo en 5 bullets (máximo 2 líneas cada uno).
 2. Fortalezas y argumentos sólidos identificados.
@@ -100,18 +100,18 @@ Analiza y provee:
 4. Supuestos implícitos que no se cuestionan.
 5. 3 preguntas críticas que el documento no responde.
 6. Recomendación final: ¿Aceptar / Rechazar / Solicitar revisión? Justificado.` },
-
+ 
   { id:4, cat:"Escritura", icon:"📄", title:"Artículo de blog SEO-optimizado",
     desc:"Crea contenido de valor que posicione y convierta.",
     prompt:`Eres un content strategist y escritor SEO con 10 años de experiencia en marketing digital.
-
+ 
 Tema: [TEMA DEL ARTÍCULO]
 Audiencia objetivo: [DESCRIPCIÓN DEL LECTOR IDEAL]
 Keyword principal: [PALABRA CLAVE]
 Keywords secundarias: [LISTA]
 Longitud objetivo: [800 / 1200 / 2000 palabras]
 Tono: [INFORMATIVO / CONVERSACIONAL / TÉCNICO]
-
+ 
 Crea un artículo completo con:
 1. Título H1 optimizado para SEO y click-through rate.
 2. Meta descripción de 155 caracteres.
@@ -119,36 +119,36 @@ Crea un artículo completo con:
 4. 4-6 secciones con H2 y H3 bien estructurados.
 5. Al menos 2 listas o tablas para mejorar escaneabilidad.
 6. Conclusión con llamado a la acción.` },
-
+ 
   { id:5, cat:"Escritura", icon:"💼", title:"Post de LinkedIn de alto engagement",
     desc:"Publica contenido que posiciona y atrae conexiones clave.",
     prompt:`Eres un experto en personal branding y marketing de contenidos en LinkedIn con más de 50K seguidores.
-
+ 
 Tema del post: [TEMA O HISTORIA A COMPARTIR]
 Mi profesión / industria: [TU SECTOR]
 Mensaje clave que quiero transmitir: [IDEA CENTRAL]
 Objetivo: [VISIBILIDAD / LEADS / NETWORKING / REFLEXIÓN]
-
+ 
 Escribe un post de LinkedIn de alto engagement que:
 1. Abra con un hook impactante en la primera línea (sin emojis genéricos).
 2. Desarrolle la idea con storytelling o datos concretos.
 3. Use espaciado visual para facilitar lectura en móvil.
 4. Incluya una pregunta o CTA al final para generar comentarios.
 5. Agregue 5 hashtags relevantes y de nicho.
-
+ 
 Estilo: directo, auténtico, sin jerga corporativa vacía.` },
-
+ 
   { id:6, cat:"Escritura", icon:"🔧", title:"Corrección y mejora de texto",
     desc:"Eleva la calidad de cualquier texto al nivel profesional.",
     prompt:`Actúa como un editor profesional con experiencia en publicaciones académicas y corporativas.
-
+ 
 Texto a mejorar:
 [PEGAR TEXTO AQUÍ]
-
+ 
 Tipo de texto: [INFORME / EMAIL / ARTÍCULO / PRESENTACIÓN / OTRO]
 Audiencia: [DESCRIPCIÓN]
 Tono objetivo: [FORMAL / TÉCNICO / DIVULGATIVO / PERSUASIVO]
-
+ 
 Realiza las siguientes acciones:
 1. Corrige errores ortográficos, gramaticales y de puntuación.
 2. Mejora la fluidez y cohesión entre párrafos.
@@ -156,60 +156,60 @@ Realiza las siguientes acciones:
 4. Fortalece verbos débiles y reemplaza clichés.
 5. Presenta la versión mejorada completa.
 6. Lista los 5 cambios más importantes realizados y por qué.
-
+ 
 Mantén la voz y las ideas originales del autor.` },
-
+ 
   { id:7, cat:"Imágenes", icon:"🖼️", title:"Retrato fotorrealista (Midjourney/DALL-E)",
     desc:"Genera retratos profesionales de alta calidad con IA.",
     prompt:`[DESCRIPCIÓN DEL SUJETO: edad, género, rasgos distintivos, expresión]
-
+ 
 Fotografía de retrato profesional, iluminación Rembrandt suave, bokeh cinematográfico f/1.4, lente 85mm, estudio fotográfico de alta gama. Skin texture ultra-detallada, ojos con catchlight natural.
-
+ 
 Estilo: [Annie Leibovitz / Peter Lindbergh / fotorrealismo editorial]
 Paleta de color: [CÁLIDA / FRÍA / DESATURADA / VIBRANTE]
 Fondo: [NEUTRO / URBANO / NATURAL / ABSTRACTO]
 Mood: [SERIO / CERCANO / MISTERIOSO / LUMINOSO]
-
+ 
 Parámetros sugeridos Midjourney: --ar 4:5 --style raw --v 6.1 --q 2` },
-
+ 
   { id:8, cat:"Imágenes", icon:"🏛️", title:"Visualización arquitectónica",
     desc:"Renders y conceptos arquitectónicos profesionales con IA.",
     prompt:`Architectural visualization, [TIPO DE EDIFICIO], [ESTILO: moderno / brutalista / orgánico / minimalista].
-
+ 
 Materiales: [HORMIGÓN PULIDO / VIDRIO / MADERA / ACERO CORTEN]
 Entorno: [URBANO / COSTERO / BOSCOSO / DESIERTO]
 Hora del día: [AMANECER / MEDIODÍA / ATARDECER / NOCHE]
-
+ 
 Iluminación arquitectónica profesional, render fotorrealista estilo Bjarke Ingels Group, perspectiva [FRONTAL / AÉREA / INTERIOR], cielo dramático, vegetación integrada.
-
+ 
 Ultra-detailed, 8K resolution --ar 16:9 --style raw --v 6.1` },
-
+ 
   { id:9, cat:"Imágenes", icon:"📦", title:"Fotografía de producto comercial",
     desc:"Imágenes de producto de nivel editorial para campañas.",
     prompt:`Product photography, [NOMBRE/DESCRIPCIÓN DEL PRODUCTO], isolated on [white / marble / concrete / dark gradient].
-
+ 
 Lighting: [Hard studio / Soft diffused / Dramatic side / Backlit glow]
 Mood: [LUXURY premium / Minimalist clean / Bold lifestyle / Natural organic]
 Color palette: [COLORES DOMINANTES]
-
+ 
 Shot on Hasselblad medium format, 100mm macro lens, professional product photography, ultra-sharp focus, commercial grade.
-
+ 
 Post-processing: color graded, [WARM / COOL / NEUTRAL] tones --ar 1:1 --style raw --v 6.1 --q 2` },
-
+ 
   { id:10, cat:"Minutas", icon:"📝", title:"Minuta de reunión ejecutiva",
     desc:"Documenta decisiones y acuerdos de forma profesional.",
     prompt:`Actúa como un asistente ejecutivo con experiencia en documentación corporativa de alto nivel.
-
+ 
 Información de la reunión:
 - Fecha y hora: [FECHA / HORA]
 - Duración: [DURACIÓN]
 - Participantes: [NOMBRE, CARGO de cada participante]
 - Tipo de reunión: [ESTRATÉGICA / OPERATIVA / COMITÉ / DIRECTORIO]
 - Moderador: [NOMBRE]
-
+ 
 Temas tratados y puntos clave discutidos:
 [NOTAS O PUNTOS PRINCIPALES]
-
+ 
 Genera una minuta ejecutiva profesional que incluya:
 1. Encabezado formal con todos los datos.
 2. Resumen ejecutivo (máximo 3 líneas).
@@ -217,37 +217,37 @@ Genera una minuta ejecutiva profesional que incluya:
 4. Decisiones tomadas (destacadas en negrita).
 5. Tabla de acuerdos: Responsable | Acción | Fecha límite.
 6. Próximos pasos y fecha de próxima reunión.` },
-
+ 
   { id:11, cat:"Minutas", icon:"🔄", title:"Minuta de seguimiento de proyecto",
     desc:"Registra avances, bloqueos y compromisos del equipo.",
     prompt:`Eres un PMO con experiencia en documentación ágil y tradicional.
-
+ 
 Proyecto: [NOMBRE DEL PROYECTO]
 Sprint / Semana: [NÚMERO / PERÍODO]
 Fecha: [FECHA]
 Asistentes: [LISTA DE PARTICIPANTES]
-
+ 
 Notas de la reunión:
 [PEGAR NOTAS O PUNTOS DISCUTIDOS]
-
+ 
 Genera la minuta con:
 1. Estado general: EN TIEMPO / CON RIESGO / RETRASADO.
 2. Avance por entregables (tabla: Entregable | % Avance | Responsable | Estado).
 3. Bloqueos identificados y propuestas de solución.
 4. Compromisos nuevos: Quién | Qué | Para cuándo.
 5. Puntos para la próxima reunión.` },
-
+ 
   { id:12, cat:"Auditoría", icon:"☑️", title:"Lista de verificación de auditoría interna",
     desc:"Checklist profesional basado en marcos COSO e ISO 9001.",
     prompt:`Eres un auditor interno certificado (CIA) con experiencia en marcos COSO, ISO 9001 e ISO 27001.
-
+ 
 Área a auditar: [NOMBRE DEL DEPARTAMENTO / PROCESO]
 Empresa / Sector: [DESCRIPCIÓN]
 Alcance: [QUÉ INCLUYE Y QUÉ EXCLUYE]
 Marco normativo aplicable: [REGULACIÓN / ESTÁNDAR / POLÍTICA INTERNA]
 Período auditado: [FECHAS]
 Nivel de riesgo percibido: [ALTO / MEDIO / BAJO]
-
+ 
 Genera una lista de verificación con:
 1. Objetivos de la auditoría.
 2. Mínimo 20 puntos de verificación por categoría.
@@ -255,17 +255,17 @@ Genera una lista de verificación con:
 4. Escala: Cumple / Cumple Parcialmente / No Cumple / N/A.
 5. Sección de hallazgos y observaciones.
 6. KRIs a monitorear post-auditoría.` },
-
+ 
   { id:13, cat:"Auditoría", icon:"📋", title:"Informe de hallazgos de auditoría",
     desc:"Redacta informes formales claros y accionables para la dirección.",
     prompt:`Actúa como un auditor senior comunicando resultados al comité de auditoría y alta dirección.
-
+ 
 Área auditada: [ÁREA]
 Período: [FECHAS]
 Equipo auditor: [NOMBRES]
 Hallazgos detectados:
 [LISTAR HALLAZGOS CON EVIDENCIAS]
-
+ 
 Redacta un informe formal que incluya:
 1. Portada y datos generales.
 2. Resumen ejecutivo (media página máximo).
@@ -275,17 +275,17 @@ Redacta un informe formal que incluya:
 6. Matriz de riesgos residuales.
 7. Plan de acción acordado (tabla).
 8. Conclusión y opinión del auditor.` },
-
+ 
   { id:14, cat:"Auditoría", icon:"⚠️", title:"Análisis de riesgos empresariales (ERM)",
     desc:"Identifica, evalúa y prioriza riesgos clave del negocio.",
     prompt:`Eres un experto en ERM con certificación CRISC y experiencia en ISO 31000 y COSO ERM.
-
+ 
 Empresa / Unidad de negocio: [DESCRIPCIÓN]
 Sector: [INDUSTRIA]
 Contexto actual: [SITUACIÓN RELEVANTE O CAMBIOS RECIENTES]
 Objetivos estratégicos en riesgo: [LISTA]
 Horizonte de análisis: [6 MESES / 1 AÑO / 3 AÑOS]
-
+ 
 Realiza un análisis completo:
 1. Identificación de mínimo 12 riesgos (internos y externos).
 2. Categorización: Estratégico / Operativo / Financiero / Compliance / Reputacional / Tecnológico.
@@ -293,19 +293,19 @@ Realiza un análisis completo:
 4. Top 5 riesgos críticos con análisis detallado.
 5. Estrategias: Evitar / Mitigar / Transferir / Aceptar.
 6. Plan de monitoreo y KRIs.` },
-
+ 
   { id:15, cat:"Auditoría", icon:"🔎", title:"Resumen ejecutivo de expediente de auditoría",
     desc:"Condensa expedientes extensos en un resumen accionable.",
     prompt:`Actúa como un auditor senior con habilidades avanzadas de síntesis y comunicación ejecutiva.
-
+ 
 Expediente / Dossier:
 [PEGAR CONTENIDO O DESCRIBIR EL EXPEDIENTE]
-
+ 
 Institución: [NOMBRE]
 Período cubierto: [FECHAS]
 Tipo de auditoría: [FINANCIERA / OPERATIVA / CUMPLIMIENTO / TECNOLÓGICA / FORENSE]
 Destinatario: [JUNTA DIRECTIVA / CONTRALORÍA / MINISTERIO]
-
+ 
 Genera un resumen ejecutivo de máximo 2 páginas con:
 1. Contexto y propósito de la auditoría.
 2. Metodología utilizada (breve).
@@ -314,19 +314,19 @@ Genera un resumen ejecutivo de máximo 2 páginas con:
 5. Recomendaciones clave (numeradas y accionables).
 6. Opinión del auditor sobre la gestión examinada.
 7. Tabla de compromisos de mejora.` },
-
+ 
   { id:16, cat:"Legal", icon:"⚖️", title:"Revisión de cláusulas contractuales de riesgo",
     desc:"Identifica riesgos, ambigüedades y cláusulas abusivas en contratos.",
     prompt:`Actúa como un abogado corporativo senior con 15 años de experiencia en derecho contractual y mercantil.
-
+ 
 Contrato a revisar:
 [PEGAR EL TEXTO DEL CONTRATO O CLÁUSULAS ESPECÍFICAS]
-
+ 
 Tipo de contrato: [SERVICIOS / COMPRAVENTA / ARRENDAMIENTO / LABORAL / NDA / OTRO]
 Nuestra posición: [CONTRATANTE / CONTRATADO / AMBAS PARTES]
 Jurisdicción aplicable: [PAÍS / ESTADO]
 Puntos de preocupación específicos: [SI LOS HAY]
-
+ 
 Realiza la revisión y provee:
 1. Resumen ejecutivo del contrato.
 2. Cláusulas de riesgo alto identificadas con su ubicación exacta.
@@ -335,25 +335,25 @@ Realiza la revisión y provee:
 5. Recomendaciones de redacción alternativa para cada cláusula problemática.
 6. Semáforo de riesgo: CRÍTICO / ALTO / MEDIO / BAJO por sección.
 7. Recomendación final: Firmar / Negociar / Rechazar.
-
+ 
 Ejemplo de hallazgo esperado:
 Cláusula 8.2 (Responsabilidad) — Riesgo: ALTO
 Problema: Limita la responsabilidad a $5,000 independientemente del daño real.
 Recomendación: Eliminar el tope o vincularlo al valor del contrato.` },
-
+ 
   { id:17, cat:"Legal", icon:"📜", title:"Dictamen jurídico / Opinión legal",
     desc:"Redacta opiniones legales fundamentadas para tomar decisiones.",
     prompt:`Eres un abogado experto en [ÁREA DEL DERECHO: administrativo / mercantil / laboral / constitucional / penal] con experiencia en elaboración de dictámenes para organismos públicos y privados.
-
+ 
 Consulta jurídica:
 [DESCRIBIR LA SITUACIÓN O PREGUNTA LEGAL]
-
+ 
 Marco normativo aplicable:
 [LEYES / REGLAMENTOS / CIRCULARES RELEVANTES]
-
+ 
 Antecedentes del caso:
 [HECHOS RELEVANTES CRONOLÓGICAMENTE]
-
+ 
 Redacta un dictamen jurídico formal que incluya:
 1. Identificación del consultante y objeto del dictamen.
 2. Hechos y antecedentes relevantes.
@@ -361,21 +361,21 @@ Redacta un dictamen jurídico formal que incluya:
 4. Análisis jurídico razonado por cada punto consultado.
 5. Conclusiones numeradas y precisas.
 6. Recomendaciones o advertencias legales.
-
+ 
 Tono: técnico-jurídico, objetivo, fundamentado en derecho positivo.` },
-
+ 
   { id:18, cat:"Finanzas", icon:"📈", title:"Análisis de estados financieros",
     desc:"Interpreta balances, resultados y flujos de caja con profundidad.",
     prompt:`Eres un analista financiero certificado (CFA) con experiencia en análisis fundamental y valoración de empresas.
-
+ 
 Estados financieros a analizar:
 [PEGAR O DESCRIBIR: Balance General, Estado de Resultados, Flujo de Caja]
-
+ 
 Período: [AÑO / TRIMESTRE]
 Empresa / Entidad: [NOMBRE Y SECTOR]
 Propósito: [INVERSIÓN / CRÉDITO / AUDITORÍA / FUSIÓN / DIAGNÓSTICO INTERNO]
 Comparar contra: [PERÍODO ANTERIOR / SECTOR / BENCHMARK]
-
+ 
 Realiza un análisis completo:
 1. Resumen de la situación financiera (semáforo: SÓLIDA / ESTABLE / VULNERABLE).
 2. Análisis de liquidez: ratios corriente, ácido, caja.
@@ -384,40 +384,40 @@ Realiza un análisis completo:
 5. Flujo de caja libre y capacidad de pago.
 6. Alertas o red flags.
 7. Conclusiones y recomendaciones.
-
+ 
 Incluye tablas comparativas y variaciones porcentuales.` },
-
+ 
   { id:19, cat:"Finanzas", icon:"🔬", title:"Due Diligence empresarial",
     desc:"Marco completo para evaluar una empresa antes de invertir o adquirir.",
     prompt:`Eres un director de M&A con 20 años de experiencia en procesos de fusiones y adquisiciones en América Latina.
-
+ 
 Empresa objetivo: [NOMBRE]
 Tipo de transacción: [ADQUISICIÓN / FUSIÓN / INVERSIÓN / ALIANZA ESTRATÉGICA]
 Monto estimado: [RANGO]
 Sector: [INDUSTRIA]
 Información disponible: [DESCRIBIR QUÉ DOCUMENTOS SE TIENEN]
-
+ 
 Desarrolla el plan de due diligence completo:
 1. Estructura por áreas: Financiera | Legal | Fiscal | Operativa | Comercial | RRHH | Tecnológica.
 2. Para cada área: mínimo 10 preguntas clave y documentos a solicitar.
 3. Semáforo de hallazgos: GREEN / YELLOW / RED (deal-breaker).
 4. Cronograma sugerido del proceso.
 5. Lista de representaciones y garantías (R&W) a solicitar.
-
+ 
 Ejemplo de hallazgo esperado:
 Área: Legal | Hallazgo: Litigio laboral pendiente por $2M | Clasificación: YELLOW
 Acción: Solicitar opinión de abogado externo y provisión en el precio.` },
-
+ 
   { id:20, cat:"Finanzas", icon:"🧮", title:"Análisis de cumplimiento presupuestario",
     desc:"Evalúa ejecución presupuestaria e identifica desviaciones críticas.",
     prompt:`Actúa como un contador público y analista de presupuestos institucionales con experiencia en sector público y privado.
-
+ 
 Institución / Entidad: [NOMBRE]
 Período de análisis: [MES / TRIMESTRE / AÑO]
 Presupuesto aprobado: [DATOS O DESCRIPCIÓN]
 Ejecución real: [DATOS O DESCRIPCIÓN]
 Centros de costo o programas: [LISTA]
-
+ 
 Genera un análisis de ejecución presupuestaria que incluya:
 1. Resumen de ejecución global (% ejecutado vs presupuestado).
 2. Tabla comparativa: Programa | Aprobado | Ejecutado | Variación $ | Variación %.
@@ -428,9 +428,9 @@ Genera un análisis de ejecución presupuestaria que incluya:
 7. Recomendaciones de ajuste o reasignación presupuestaria.
 8. Indicadores de gestión: eficiencia, economía, eficacia.` },
 ];
-
+ 
 const CATS = ["Todas","Productividad","Escritura","Imágenes","Minutas","Auditoría","Legal","Finanzas"];
-
+ 
 // ─── UTILITY COMPONENTS ───────────────────────────────────────────────────────
 function Card({ children, style={}, accent }) {
   return (
@@ -440,7 +440,7 @@ function Card({ children, style={}, accent }) {
     </div>
   );
 }
-
+ 
 function SectionLabel({ color=C.navy, children }) {
   return (
     <p style={{ margin:"0 0 1rem", fontFamily:"'Outfit',sans-serif", fontSize:"0.7rem",
@@ -449,7 +449,7 @@ function SectionLabel({ color=C.navy, children }) {
     </p>
   );
 }
-
+ 
 function Pill({ color=C.blue, bg, children }) {
   return (
     <span style={{ background:bg||`${color}18`, color, border:`1px solid ${color}40`,
@@ -458,7 +458,7 @@ function Pill({ color=C.blue, bg, children }) {
     </span>
   );
 }
-
+ 
 // ─── SCORE RING ────────────────────────────────────────────────────────────────
 function ScoreRing({ score, maxScore=25, label, color=C.blue, size=84 }) {
   const pct=Math.min(score/maxScore,1), r=(size-12)/2, circ=2*Math.PI*r, dash=circ*pct;
@@ -479,7 +479,7 @@ function ScoreRing({ score, maxScore=25, label, color=C.blue, size=84 }) {
     </div>
   );
 }
-
+ 
 function BigScore({ score }) {
   const color=score>=75?C.green:score>=50?C.amber:C.red;
   const label=score>=75?"Excelente":score>=50?"Mejorable":"Débil";
@@ -506,7 +506,7 @@ function BigScore({ score }) {
     </div>
   );
 }
-
+ 
 // ─── API HELPERS ──────────────────────────────────────────────────────────────
 async function callClaude(messages, systemPrompt) {
   const resp = await fetch("/api/chat", {
@@ -521,18 +521,18 @@ async function callClaude(messages, systemPrompt) {
   const d = await resp.json();
   return d.content || "";
 }
-
+ 
 function extractJSON(text) {
   let t = text.trim();
-
+ 
   // 1. Quitar markdown fences si el modelo los agrega
   const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/);
   if (fence) t = fence[1].trim();
-
+ 
   // 2. Extraer el bloque { ... } más externo
   const s = t.indexOf("{"), e = t.lastIndexOf("}");
   if (s !== -1 && e !== -1) t = t.slice(s, e + 1);
-
+ 
   // 3. Recorrer caracter por caracter para limpiar saltos de línea
   //    reales dentro de strings (bug común en llama3)
   let fixed = "";
@@ -549,43 +549,44 @@ function extractJSON(text) {
     fixed += ch;
   }
   t = fixed;
-
+ 
   // 4. Eliminar comas sueltas antes de } o ]
   t = t.replace(/,\s*([}\]])/g, "$1");
-
+ 
   try {
     return JSON.parse(t);
   } catch(err) {
     throw new Error("El modelo no generó JSON válido. Intenta de nuevo.");
   }
 }
-
-const EVAL_SYSTEM=`Eres un evaluador experto de prompts de IA. Debes responder UNICAMENTE con un objeto JSON en una sola linea, sin saltos de linea, sin markdown, sin texto adicional antes ni despues.
-
+ 
+const EVAL_SYSTEM=`Eres un evaluador experto de prompts de IA. TODAS tus respuestas deben estar en ESPANOL, sin excepcion. Responde UNICAMENTE con un objeto JSON en una sola linea, sin saltos de linea, sin markdown, sin texto adicional.
+ 
 REGLAS DEL JSON:
-- Todo el JSON debe estar en UNA SOLA LINEA
-- No uses saltos de linea dentro de ningun valor string
-- No uses comillas dobles dentro de los strings, usa comillas simples si necesitas citar algo
-
-RUBRICA DE PUNTUACION:
-- persona (0-25): tiene rol o perfil experto definido?
-- task (0-25): tarea clara, concreta y medible?
-- context (0-20): suficiente informacion de fondo?
-- constraints (0-15): especifica formato, tono, idioma, extension?
+- Todo el JSON en UNA SOLA LINEA, sin saltos de linea en ningun valor
+- Todos los textos en ESPANOL obligatoriamente
+- No uses comillas dobles dentro de strings, usa comillas simples
+ 
+RUBRICA (puntua con criterio exigente):
+- persona (0-25): tiene rol experto especifico? Sin rol = maximo 5 puntos
+- task (0-25): tarea concreta y medible? Vaga = maximo 8 puntos
+- context (0-20): informacion de fondo suficiente? Sin contexto = maximo 5 puntos
+- constraints (0-15): especifica formato, tono, idioma, extension? Sin restricciones = 0 puntos
 - clarity (0-15): lenguaje preciso sin ambiguedad?
-
-REGLAS DEL improved_prompt:
-1. SIEMPRE incluye los 5 bloques con estas etiquetas exactas: [ROL], [TAREA], [CONTEXTO], [RESTRICCIONES], [CLARIDAD]
-2. NUNCA hagas preguntas en el improved_prompt
-3. Es una instruccion completa, no un dialogo
-4. Infiere el contexto mas probable si el prompt original es vago
-5. Todo en una sola linea sin saltos de linea
-
-Formato EXACTO que debes devolver (una sola linea):
-{"total_score":0,"scores":{"persona":0,"task":0,"context":0,"constraints":0,"clarity":0},"diagnosis":{"persona":"texto","task":"texto","context":"texto","constraints":"texto","clarity":"texto"},"improvements":["mejora 1","mejora 2","mejora 3","mejora 4"],"improved_prompt":"[ROL] texto. [TAREA] texto. [CONTEXTO] texto. [RESTRICCIONES] texto. [CLARIDAD] texto.","short_explanation":"resumen en 2 oraciones"}
-
-El idioma de todos los textos debe coincidir con el idioma del prompt evaluado.`;
-
+ 
+REGLAS DEL improved_prompt (MUY IMPORTANTE):
+1. SIEMPRE en ESPANOL
+2. SIEMPRE completa los 5 bloques con contenido real y especifico, NUNCA escribas 'None' o 'Ninguna'
+3. [ROL]: experto concreto con anos de experiencia y area especifica
+4. [TAREA]: accion clara con verbo especifico y resultado esperado
+5. [CONTEXTO]: quien pregunta, para que, nivel de conocimiento
+6. [RESTRICCIONES]: idioma espanol, formato especifico, tono, extension aproximada
+7. [CLARIDAD]: objetivo reformulado con precision
+8. NUNCA hagas preguntas, es una instruccion completa
+ 
+Formato EXACTO a devolver (una sola linea, todo en espanol):
+{"total_score":0,"scores":{"persona":0,"task":0,"context":0,"constraints":0,"clarity":0},"diagnosis":{"persona":"texto en espanol","task":"texto en espanol","context":"texto en espanol","constraints":"texto en espanol","clarity":"texto en espanol"},"improvements":["mejora 1 en espanol","mejora 2 en espanol","mejora 3 en espanol","mejora 4 en espanol"],"improved_prompt":"[ROL] experto especifico con X anos en area. [TAREA] accion concreta y medible. [CONTEXTO] quien pregunta y para que. [RESTRICCIONES] Responde en espanol, formato parrafos, tono divulgativo, maximo 300 palabras. [CLARIDAD] objetivo preciso sin ambiguedad.","short_explanation":"resumen en 2 oraciones en espanol"}`;
+ 
 // ─── EXAMPLE PROMPTS FOR EVALUATOR ───────────────────────────────────────────
 const EXAMPLE_PROMPTS = [
   { level:"🔴 Débil", label:"Sin estructura alguna", color:C.red,
@@ -594,23 +595,23 @@ const EXAMPLE_PROMPTS = [
     text:"Explícame cómo funciona el machine learning y cuáles son sus tipos principales. Quiero entenderlo bien." },
   { level:"🟢 Excelente", label:"Los 5 pilares + ejemplo few-shot", color:C.green,
     text:`Actúa como un profesor universitario de ciencia de datos con 10 años de experiencia explicando conceptos complejos a audiencias no técnicas.
-
+ 
 Tu tarea es explicar qué es el machine learning y sus tres tipos principales (supervisado, no supervisado, por refuerzo).
-
+ 
 Contexto: mi audiencia son directivos de una empresa mediana sin conocimientos técnicos que deben decidir si invertir en proyectos de ML.
-
+ 
 Restricciones:
 - Responde en español
 - Usa analogías con situaciones del mundo empresarial
 - Incluye un ejemplo práctico para cada tipo de ML
 - Formato: 3 secciones con subtítulos, máximo 300 palabras en total
 - Al final, una tabla comparativa de los 3 tipos
-
+ 
 Ejemplo del nivel de lenguaje esperado:
 Pregunta: "¿Qué es el aprendizaje supervisado?"
 Respuesta esperada: "Es como entrenar a un nuevo empleado con un manual de casos resueltos. Le muestras 1,000 facturas correctas y 1,000 incorrectas, y aprende a distinguirlas por sus patrones."` },
 ];
-
+ 
 // ─── EVALUATOR TAB ────────────────────────────────────────────────────────────
 function EvaluatorTab() {
   const [prompt,setPrompt]=useState("");
@@ -620,7 +621,7 @@ function EvaluatorTab() {
   const [loadingComp,setLoadingComp]=useState(false);
   const [origAns,setOrigAns]=useState(null);
   const [impAns,setImpAns]=useState(null);
-
+ 
   const evaluate=async()=>{
     if(!prompt.trim())return;
     setLoading(true); setError(null); setResult(null); setOrigAns(null); setImpAns(null);
@@ -630,7 +631,7 @@ function EvaluatorTab() {
     } catch(e){ setError(e.message); }
     finally{ setLoading(false); }
   };
-
+ 
   const compare=async()=>{
     if(!result)return;
     setLoadingComp(true);
@@ -643,7 +644,7 @@ function EvaluatorTab() {
     } catch(e){ setError(e.message); }
     finally{ setLoadingComp(false); }
   };
-
+ 
   const dimScores=result?[
     {key:"persona",label:"Persona / Rol",max:25,val:result.scores?.persona||0},
     {key:"task",label:"Tarea / Objetivo",max:25,val:result.scores?.task||0},
@@ -651,7 +652,7 @@ function EvaluatorTab() {
     {key:"constraints",label:"Restricciones",max:15,val:result.scores?.constraints||0},
     {key:"clarity",label:"Claridad",max:15,val:result.scores?.clarity||0},
   ]:[];
-
+ 
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:"1.4rem" }}>
       {/* Examples bank */}
@@ -677,7 +678,7 @@ function EvaluatorTab() {
           ))}
         </div>
       </Card>
-
+ 
       {/* Input */}
       <Card>
         <SectionLabel>Tu prompt — sin límite de palabras</SectionLabel>
@@ -700,16 +701,16 @@ function EvaluatorTab() {
           {prompt&&<span style={{ fontSize:"0.78rem", color:C.muted }}>{prompt.split(/\s+/).filter(Boolean).length} palabras</span>}
         </div>
       </Card>
-
+ 
       {error&&<div style={{ background:C.redLight, border:`1px solid ${C.red}40`, borderRadius:12, padding:"1rem 1.4rem", color:C.red, fontSize:"0.85rem" }}>⚠ {error}</div>}
-
+ 
       {loading&&(
         <div style={{ textAlign:"center", padding:"2.5rem", color:C.muted }}>
           <div style={{ display:"inline-block", width:40, height:40, border:`3px solid ${C.border}`, borderTopColor:C.navy, borderRadius:"50%", animation:"spin 0.8s linear infinite" }}/>
           <p style={{ marginTop:14, fontSize:"0.85rem" }}>Claude está analizando tu prompt en profundidad...</p>
         </div>
       )}
-
+ 
       {result&&<>
         <Card>
           <SectionLabel>Puntuación por dimensión</SectionLabel>
@@ -728,7 +729,7 @@ function EvaluatorTab() {
             </div>
           )}
         </Card>
-
+ 
         <Card>
           <SectionLabel>Diagnóstico detallado</SectionLabel>
           {[{k:"persona",l:"Persona / Rol"},{k:"task",l:"Tarea"},{k:"context",l:"Contexto"},{k:"constraints",l:"Restricciones"},{k:"clarity",l:"Claridad"}].map(({k,l})=>{
@@ -746,7 +747,7 @@ function EvaluatorTab() {
             ):null;
           })}
         </Card>
-
+ 
         {result.improvements?.length>0&&(
           <Card>
             <SectionLabel>Sugerencias de mejora</SectionLabel>
@@ -758,7 +759,7 @@ function EvaluatorTab() {
             ))}
           </Card>
         )}
-
+ 
         {result.improved_prompt&&(
           <Card accent={C.navy} style={{ background:`${C.navy}05` }}>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"1rem" }}>
@@ -772,7 +773,7 @@ function EvaluatorTab() {
             </pre>
           </Card>
         )}
-
+ 
         {result.improved_prompt&&(
           <Card>
             <SectionLabel>Comparación de respuestas en tiempo real</SectionLabel>
@@ -802,7 +803,7 @@ function EvaluatorTab() {
     </div>
   );
 }
-
+ 
 // ─── LIBRARY TAB ─────────────────────────────────────────────────────────────
 function PromptCard({ p }) {
   const [copied,setCopied]=useState(false);
@@ -841,7 +842,7 @@ function PromptCard({ p }) {
     </div>
   );
 }
-
+ 
 function LibraryTab() {
   const [cat,setCat]=useState("Todas");
   const [search,setSearch]=useState("");
@@ -881,7 +882,7 @@ function LibraryTab() {
     </div>
   );
 }
-
+ 
 // ─── GUIDE TAB ────────────────────────────────────────────────────────────────
 const PILLARS=[
   { icon:"👤", title:"Persona / Rol", max:25, color:C.navy,
@@ -905,7 +906,7 @@ const PILLARS=[
     bad:"Haz algo útil con esto y sé breve pero también exhaustivo.",
     good:`Genera un dictamen jurídico de 2 páginas sobre la procedencia legal de la Licitación No. 2024-LY-000002 según la Ley de Contratación Pública N°9986. Un párrafo por punto consultado.` },
 ];
-
+ 
 function GuideTab() {
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:"1.4rem" }}>
@@ -939,7 +940,7 @@ function GuideTab() {
           ))}
         </div>
       </Card>
-
+ 
       <Card>
         <SectionLabel>Por qué los ejemplos few-shot son tan poderosos</SectionLabel>
         <p style={{ fontSize:"0.83rem",color:C.muted,margin:"0 0 1rem",lineHeight:1.7 }}>
@@ -958,7 +959,7 @@ function GuideTab() {
           </div>
         </div>
       </Card>
-
+ 
       <Card accent={C.green} style={{ background:`${C.green}05` }}>
         <SectionLabel color={C.green}>Fórmula ganadora — copia y adapta</SectionLabel>
         <pre style={{ fontFamily:"'JetBrains Mono',monospace",fontSize:"0.79rem",color:C.text,lineHeight:2,margin:0,whiteSpace:"pre-wrap" }}>
@@ -973,7 +974,7 @@ function GuideTab() {
 [CIERRE]    → "Si necesitas información adicional, indícalo antes de responder."`}
         </pre>
       </Card>
-
+ 
       <Card>
         <SectionLabel>Errores más comunes ⚠️</SectionLabel>
         {[
@@ -996,7 +997,7 @@ function GuideTab() {
     </div>
   );
 }
-
+ 
 // ─── INICIO TAB ───────────────────────────────────────────────────────────────
 const REFS=[
   { icon:"🟤", name:"Anthropic — Prompt Engineering", desc:"Guía oficial para construir prompts efectivos con Claude.", url:"https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview", color:C.navy },
@@ -1006,13 +1007,13 @@ const REFS=[
   { icon:"🇨🇷", name:"Contraloría General de la República", desc:"Institución fiscalizadora superior de Costa Rica. Marco normativo de referencia.", url:"https://www.cgr.go.cr/", color:C.teal },
   { icon:"🎨", name:"Midjourney Documentation", desc:"Documentación oficial para crear imágenes con IA mediante prompts visuales.", url:"https://docs.midjourney.com/", color:C.purple },
 ];
-
+ 
 const FEATURES=[
   { icon:"🎯", title:"Evaluador con IA", desc:"Score 1-100 en 5 dimensiones, diagnóstico detallado y prompt optimizado con ejemplos few-shot incluidos.", tab:"evaluator" },
   { icon:"📖", title:"Guía de Prompt Engineering", desc:"Los 5 pilares con ejemplos reales de prompts débiles vs. bien estructurados. Incluye la fórmula ganadora.", tab:"guide" },
   { icon:"🗂️", title:"Librería de 20 Prompts", desc:"Plantillas para auditores, abogados, analistas financieros, productividad ejecutiva, escritura e imágenes.", tab:"library" },
 ];
-
+ 
 function InicioTab({ onTabChange }) {
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:"1.6rem" }}>
@@ -1035,7 +1036,7 @@ function InicioTab({ onTabChange }) {
           </button>
         </div>
       </div>
-
+ 
       {/* Why it matters */}
       <Card>
         <SectionLabel>¿Por qué importa escribir buenos prompts?</SectionLabel>
@@ -1051,7 +1052,7 @@ function InicioTab({ onTabChange }) {
           </p>
         </div>
       </Card>
-
+ 
       {/* Features */}
       <div>
         <SectionLabel>¿Qué encontrarás aquí?</SectionLabel>
@@ -1069,7 +1070,7 @@ function InicioTab({ onTabChange }) {
           ))}
         </div>
       </div>
-
+ 
       {/* Reference links */}
       <Card>
         <SectionLabel>📚 Recursos de referencia recomendados</SectionLabel>
@@ -1091,7 +1092,7 @@ function InicioTab({ onTabChange }) {
           ))}
         </div>
       </Card>
-
+ 
       {/* Bottom CTA */}
       <div style={{ background:C.navyLight,borderRadius:14,padding:"1.6rem 2rem",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:12,border:`1px solid ${C.blue}25` }}>
         <div>
@@ -1105,24 +1106,24 @@ function InicioTab({ onTabChange }) {
     </div>
   );
 }
-
+ 
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function PromptLabAcademy() {
   const [tab,setTab]=useState("inicio");
-
+ 
   const TABS=[
     { id:"inicio",    label:"🏠  Inicio"   },
     { id:"guide",     label:"📖  Guía"     },
     { id:"evaluator", label:"✦  Evaluador" },
     { id:"library",   label:"⊞  Librería" },
   ];
-
+ 
   const HEADERS={
     guide:     { title:<>Guía de <span style={{ color:"#7dd3fc" }}>Prompt Engineering</span></>, sub:"Los 5 pilares con ejemplos reales, errores comunes, técnica few-shot y la fórmula ganadora." },
     evaluator: { title:<>Evaluador & <span style={{ color:"#86efac" }}>Optimizador</span> de Prompts</>, sub:"Sin límite de palabras. Pega tu prompt y recibe score detallado, diagnóstico y versión mejorada lista para usar." },
     library:   { title:<>Librería de Prompts <span style={{ color:"#fde68a" }}>Profesionales</span></>, sub:"20 plantillas para auditores, abogados, analistas financieros, productividad, escritura e imágenes." },
   };
-
+ 
   return (
     <>
       <style>{`
@@ -1134,7 +1135,7 @@ export default function PromptLabAcademy() {
         ::-webkit-scrollbar-thumb{background:${C.borderHi};border-radius:3px;}
         @keyframes spin{to{transform:rotate(360deg);}}
       `}</style>
-
+ 
       <div style={{ minHeight:"100vh", background:C.bg }}>
         {/* Header */}
         <div style={{ background:C.card, borderBottom:`1px solid ${C.border}`, boxShadow:"0 1px 8px rgba(30,57,104,0.07)", padding:"0 2rem", position:"sticky", top:0, zIndex:100 }}>
@@ -1160,7 +1161,7 @@ export default function PromptLabAcademy() {
             </nav>
           </div>
         </div>
-
+ 
         {/* Page header strip */}
         {tab!=="inicio"&&HEADERS[tab]&&(
           <div style={{ background:C.navy, padding:"1.5rem 2rem" }}>
@@ -1174,7 +1175,7 @@ export default function PromptLabAcademy() {
             </div>
           </div>
         )}
-
+ 
         {/* Content */}
         <div style={{ maxWidth:1100, margin:"0 auto", padding:"2rem" }}>
           {tab==="inicio"    && <InicioTab onTabChange={setTab}/>}
@@ -1182,7 +1183,7 @@ export default function PromptLabAcademy() {
           {tab==="evaluator" && <EvaluatorTab/>}
           {tab==="library"   && <LibraryTab/>}
         </div>
-
+ 
         {/* Footer */}
         <div style={{ borderTop:`1px solid ${C.border}`, background:C.card, padding:"1.2rem 2rem", textAlign:"center" }}>
           <span style={{ fontSize:"0.75rem",color:C.muted }}>PromptLab Academy · Powered by Claude API · {new Date().getFullYear()} · Para uso profesional e institucional</span>
