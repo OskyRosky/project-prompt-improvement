@@ -1,13 +1,13 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# PromptLab Academy — Mac M4 (Apple Silicon arm64)
-# Node 20 compila React y sirve todo (static + proxy) en un solo proceso
-# Ollama corre fuera del contenedor en el Mac
+# PromptLab CGR — Versión Institucional
+# Plataforma: linux/amd64 (AWS ECS Fargate x86_64)
+# LLM: AWS Bedrock (Claude 3 Haiku) — sin Ollama
 # ──────────────────────────────────────────────────────────────────────────────
-FROM node:20-alpine
+FROM --platform=linux/amd64 node:20-alpine
 
 WORKDIR /app
 
-# Instalar dependencias
+# Instalar dependencias (incluye AWS SDK para Bedrock)
 COPY package.json ./
 RUN npm install
 
@@ -15,16 +15,26 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Puerto 4547
-EXPOSE 4547
+# Puerto estándar
+EXPOSE 8080
 
-# Ollama corre en el Mac — host.docker.internal apunta al Mac desde Docker
-ENV OLLAMA_BASE_URL=http://host.docker.internal:11434
-ENV OLLAMA_MODEL=llama3:latest
-ENV PORT=4547
+# ── Variables de entorno ──────────────────────────────────────────────────────
+# Región AWS donde está habilitado Bedrock
+ENV AWS_REGION=us-east-1
+
+# Modelo de Bedrock — Claude 3 Haiku (rápido y económico)
+# Alternativa: anthropic.claude-3-sonnet-20240229-v1:0 (mayor calidad)
+ENV BEDROCK_MODEL=anthropic.claude-3-haiku-20240307-v1:0
+
+ENV PORT=8080
+
+# NOTA DE SEGURIDAD:
+# NO incluir AWS_ACCESS_KEY_ID ni AWS_SECRET_ACCESS_KEY aquí.
+# En ECS Fargate usar IAM Task Role (más seguro).
+# Para pruebas locales pasarlas con -e al correr el contenedor.
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:4547/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD node -e "require('http').get('http://localhost:8080/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
 
 CMD ["node", "start.cjs"]
